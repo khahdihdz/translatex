@@ -79,68 +79,130 @@ private fun TranslateXApp() {
         }
     }
 
-    MaterialTheme(colorScheme = lightColorScheme(primary = androidx.compose.ui.graphics.Color(0xFF3157D5), secondary = androidx.compose.ui.graphics.Color(0xFF5868A8))) {
-        Scaffold(topBar = {
-            TopAppBar(title = { Column {
-                Text("TranslateX", fontWeight = FontWeight.Bold)
-                Text("AI Translator · Dịch đa ngôn ngữ", style = MaterialTheme.typography.labelSmall)
-            } }, actions = { TextButton(onClick = { showSettings = true }) { Text("Cài đặt") } })
-        }) { padding ->
-            Column(Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
-                    Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
-                        Text("TranslateX", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
-                        Text("Dịch văn bản và hình ảnh tự nhiên bằng AI", style = MaterialTheme.typography.bodyMedium)
-                        Text("Giữ ngữ cảnh · Nhiều ngôn ngữ · Có chế độ ngoại tuyến", style = MaterialTheme.typography.labelSmall)
-                    }
+    val navy = androidx.compose.ui.graphics.Color(0xFF182342)
+    val blue = androidx.compose.ui.graphics.Color(0xFF3157D5)
+    val pale = androidx.compose.ui.graphics.Color(0xFFEEF1FF)
+    val soft = androidx.compose.ui.graphics.Color(0xFFF5F6FA)
+    MaterialTheme(colorScheme = lightColorScheme(primary = blue, secondary = androidx.compose.ui.graphics.Color(0xFF5267A8), background = androidx.compose.ui.graphics.Color(0xFFF8F9FD), surface = androidx.compose.ui.graphics.Color.White, onSurface = navy)) {
+        Scaffold(
+            containerColor = androidx.compose.ui.graphics.Color(0xFFF8F9FD),
+            topBar = {
+                TopAppBar(
+                    title = { Text("TranslateX", fontWeight = FontWeight.ExtraBold, color = navy) },
+                    actions = { TextButton(onClick = { showSettings = true }) { Text("⚙", color = blue, style = MaterialTheme.typography.titleLarge) } },
+                    colors = TopAppBarDefaults.topAppBarColors(containerColor = androidx.compose.ui.graphics.Color.White)
+                )
+            }
+        ) { padding ->
+            Column(
+                Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(horizontal = 18.dp, vertical = 14.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text("✦ AI", color = blue, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
+                    Spacer(Modifier.weight(1f))
+                    Text("DỊCH TỰ NHIÊN", color = MaterialTheme.colorScheme.secondary, style = MaterialTheme.typography.labelSmall)
                 }
-                Card {
-                    Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Text("NGÔN NGỮ", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
-                        LanguageDropdown("Từ ngôn ngữ", sourceTag) { sourceTag = it }
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text("Dịch sang", style = MaterialTheme.typography.labelLarge, modifier = Modifier.weight(1f))
-                            Text("${targets.size} đã chọn", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.secondary)
-                        }
-                        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                            targets.forEach { tag ->
-                                val label = languages.firstOrNull { it.tag == tag }?.label ?: tag
-                                InputChip(selected = true, onClick = { if (targets.size > 1) targets = targets - tag }, label = { Text(label) }, trailingIcon = { Text("×") })
-                            }
-                        }
-                        var targetExpanded by remember { mutableStateOf(false) }
-                        ExposedDropdownMenuBox(expanded = targetExpanded, onExpandedChange = { targetExpanded = it }) {
-                            OutlinedButton(onClick = { targetExpanded = true }, modifier = Modifier.menuAnchor().fillMaxWidth()) {
-                                Text("＋ Thêm ngôn ngữ đích")
-                            }
-                            ExposedDropdownMenu(expanded = targetExpanded, onDismissRequest = { targetExpanded = false }) {
-                                languages.filter { it.tag != "auto" && it.tag !in targets }.forEach { lang ->
-                                    DropdownMenuItem(text = { Text(lang.label) }, onClick = {
-                                        targets = targets + lang.tag
-                                        targetExpanded = false
-                                    })
+
+                Card(shape = androidx.compose.foundation.shape.RoundedCornerShape(20.dp), colors = CardDefaults.cardColors(containerColor = pale), elevation = CardDefaults.cardElevation(0.dp)) {
+                    Row(Modifier.fillMaxWidth().padding(9.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(5.dp)) {
+                        Box(Modifier.weight(1f)) { LanguageDropdown("Từ", sourceTag) { sourceTag = it } }
+                        IconButton(onClick = {
+                            val oldSource = sourceTag
+                            val oldTarget = targets.firstOrNull() ?: "vi"
+                            sourceTag = oldTarget
+                            targets = setOf(if (oldSource == "auto") "en" else oldSource)
+                        }) { Icon(Icons.Default.SwapHoriz, contentDescription = "Đổi ngôn ngữ", tint = blue) }
+                        Box(Modifier.weight(1f)) {
+                            var expanded by remember { mutableStateOf(false) }
+                            val label = targets.mapNotNull { t -> languages.firstOrNull { it.tag == t }?.label }.joinToString(", ").ifBlank { "Chọn đích" }
+                            ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = it }) {
+                                OutlinedTextField(
+                                    value = label, onValueChange = {}, readOnly = true,
+                                    label = { Text("Sang") }, trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded) },
+                                    modifier = Modifier.menuAnchor().fillMaxWidth(),
+                                    textStyle = MaterialTheme.typography.bodySmall,
+                                    shape = androidx.compose.foundation.shape.RoundedCornerShape(14.dp),
+                                    colors = OutlinedTextFieldDefaults.colors(
+                                        focusedBorderColor = blue,
+                                        unfocusedBorderColor = androidx.compose.ui.graphics.Color.Transparent,
+                                        focusedContainerColor = androidx.compose.ui.graphics.Color.White,
+                                        unfocusedContainerColor = androidx.compose.ui.graphics.Color.White
+                                    )
+                                )
+                                ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+                                    languages.filter { it.tag != "auto" }.forEach { lang ->
+                                        DropdownMenuItem(
+                                            text = { Text((if (lang.tag in targets) "✓ " else "") + lang.label) },
+                                            onClick = {
+                                                targets = if (lang.tag in targets && targets.size > 1) targets - lang.tag else targets + lang.tag
+                                                expanded = false
+                                            }
+                                        )
+                                    }
                                 }
                             }
                         }
                     }
                 }
-                var styleExpanded by remember { mutableStateOf(false) }
-                ExposedDropdownMenuBox(expanded = styleExpanded, onExpandedChange = { styleExpanded = it }) {
-                    OutlinedTextField(value = style, onValueChange = {}, readOnly = true, label = { Text("Văn phong") },
-                        trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(styleExpanded) }, modifier = Modifier.menuAnchor().fillMaxWidth())
-                    ExposedDropdownMenu(expanded = styleExpanded, onDismissRequest = { styleExpanded = false }) {
-                        styles.forEach { option -> DropdownMenuItem(text = { Text(option) }, onClick = { style = option; styleExpanded = false }) }
+
+                Card(shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp), colors = CardDefaults.cardColors(containerColor = androidx.compose.ui.graphics.Color.White), elevation = CardDefaults.cardElevation(1.dp)) {
+                    Column(Modifier.fillMaxWidth().padding(17.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("VĂN BẢN GỐC", color = MaterialTheme.colorScheme.secondary, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
+                            Spacer(Modifier.weight(1f))
+                            TextButton(onClick = { source = "" }) { Text("Xóa") }
+                        }
+                        OutlinedTextField(
+                            value = source, onValueChange = { source = it },
+                            modifier = Modifier.fillMaxWidth().heightIn(min = 150.dp),
+                            placeholder = { Text("Nhập hoặc dán văn bản cần dịch…") }, minLines = 5,
+                            textStyle = MaterialTheme.typography.bodyLarge,
+                            shape = androidx.compose.foundation.shape.RoundedCornerShape(18.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedBorderColor = blue,
+                                unfocusedBorderColor = androidx.compose.ui.graphics.Color.Transparent,
+                                focusedContainerColor = soft,
+                                unfocusedContainerColor = soft
+                            )
+                        )
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            FilterChip(selected = mode == "AI", onClick = { mode = "AI" }, label = { Text("AI") })
+                            FilterChip(selected = mode == "Offline", onClick = { mode = "Offline" }, label = { Text("Offline") })
+                            Spacer(Modifier.weight(1f))
+                            var styleExpanded by remember { mutableStateOf(false) }
+                            Box {
+                                TextButton(onClick = { styleExpanded = true }) { Text(style) }
+                                DropdownMenu(expanded = styleExpanded, onDismissRequest = { styleExpanded = false }) {
+                                    styles.forEach { item -> DropdownMenuItem(text = { Text(item) }, onClick = { style = item; styleExpanded = false }) }
+                                }
+                            }
+                        }
                     }
                 }
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    FilterChip(selected = mode == "AI", onClick = { mode = "AI" }, label = { Text("Gemini AI") })
-                    FilterChip(selected = mode == "Offline", onClick = { mode = "Offline" }, label = { Text("Offline ML Kit") })
+
+                Card(shape = androidx.compose.foundation.shape.RoundedCornerShape(24.dp), colors = CardDefaults.cardColors(containerColor = pale), elevation = CardDefaults.cardElevation(0.dp)) {
+                    Column(Modifier.fillMaxWidth().padding(18.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("BẢN DỊCH", color = blue, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
+                            Spacer(Modifier.weight(1f))
+                            if (result.isNotBlank()) TextButton(onClick = {
+                                val clipboard = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                                clipboard.setPrimaryClip(android.content.ClipData.newPlainText("TranslateX", result))
+                                status = "Đã sao chép kết quả."
+                            }) { Icon(Icons.Default.ContentCopy, contentDescription = null); Text("Sao chép") }
+                        }
+                        Text(result.ifBlank { "Bản dịch sẽ hiển thị tại đây" }, color = if (result.isBlank()) MaterialTheme.colorScheme.secondary else navy, style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(vertical = 22.dp))
+                    }
                 }
-                OutlinedTextField(value = source, onValueChange = { source = it }, modifier = Modifier.fillMaxWidth().heightIn(min = 150.dp),
-                    label = { Text("NỘI DUNG CẦN DỊCH") }, placeholder = { Text("Nhập hoặc dán văn bản cần dịch…") }, minLines = 5)
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
+
+                Surface(color = pale, shape = androidx.compose.foundation.shape.RoundedCornerShape(50)) {
+                    Text("Natural translation", color = blue, modifier = Modifier.padding(horizontal = 16.dp, vertical = 9.dp), style = MaterialTheme.typography.labelLarge)
+                }
+
+                Row(horizontalArrangement = Arrangement.spacedBy(10.dp), modifier = Modifier.fillMaxWidth()) {
                     OutlinedButton(onClick = { imagePicker.launch("image/*") }, modifier = Modifier.weight(1f)) {
-                        Icon(Icons.Default.Image, contentDescription = null); Spacer(Modifier.width(6.dp)); Text("Dịch ảnh / OCR")
+                        Icon(Icons.Default.Image, contentDescription = null); Spacer(Modifier.width(5.dp)); Text("Dịch ảnh")
                     }
                     Button(onClick = {
                         if (source.isBlank() || targets.isEmpty()) status = "Nhập nội dung và chọn ít nhất một ngôn ngữ đích."
@@ -162,39 +224,32 @@ private fun TranslateXApp() {
                             } catch (e: Exception) { status = e.localizedMessage ?: "Không thể dịch lúc này." }
                             finally { loading = false }
                         }
-                    }, enabled = !loading, modifier = Modifier.weight(1f)) {
-                        if (loading) CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp) else Text(if (mode == "Offline") "Dịch ngoại tuyến" else "Dịch ngay")
+                    }, enabled = !loading, modifier = Modifier.weight(1f), shape = androidx.compose.foundation.shape.RoundedCornerShape(14.dp)) {
+                        if (loading) CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp) else Text(if (mode == "Offline") "Dịch offline" else "Dịch ngay")
                     }
                 }
                 Text(status, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.secondary)
-                if (result.isNotBlank()) Card {
-                    Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Row(verticalAlignment = Alignment.CenterVertically) {
-                            Text("Kết quả dịch", fontWeight = FontWeight.Bold, modifier = Modifier.weight(1f))
-                            TextButton(onClick = {
-                                val clipboard = context.getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
-                                clipboard.setPrimaryClip(android.content.ClipData.newPlainText("TranslateX", result)); status = "Đã sao chép kết quả."
-                            }) { Icon(Icons.Default.ContentCopy, contentDescription = null); Text("Copy") }
-                        }
-                        Text(result)
-                    }
-                }
                 if (history.isNotEmpty()) {
-                    Text("Gần đây", style = MaterialTheme.typography.titleSmall)
+                    Text("Gần đây", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold)
                     history.forEach { item -> TextButton(onClick = { source = item }) { Text(item, maxLines = 1) } }
                 }
-                Text("Gemini AI cần API Key cá nhân và Internet. Offline dùng mô hình ML Kit tải về theo từng cặp ngôn ngữ; danh sách hỗ trợ có thể khác AI online. OCR xử lý trên thiết bị.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("Gemini AI cần API Key cá nhân và Internet. Offline dùng mô hình ML Kit tải theo từng cặp ngôn ngữ; OCR xử lý trên thiết bị.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
-        if (showSettings) AlertDialog(onDismissRequest = { showSettings = false }, title = { Text("Cài đặt AI") }, text = {
-            Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                Text("API Key được mã hóa bằng Android Keystore và chỉ lưu trên thiết bị.")
-                OutlinedTextField(value = apiKey, onValueChange = { apiKey = it }, label = { Text("Gemini API Key") }, singleLine = true)
-                TextButton(onClick = { apiKey = ""; SecureKeyStore.save(context, "") }) { Text("Xóa API Key") }
-                Text("Lấy khóa tại aistudio.google.com", style = MaterialTheme.typography.bodySmall)
-            }
-        }, confirmButton = { TextButton(onClick = { SecureKeyStore.save(context, apiKey); showSettings = false }) { Text("Lưu") } },
-            dismissButton = { TextButton(onClick = { showSettings = false }) { Text("Đóng") } })
+        if (showSettings) AlertDialog(
+            onDismissRequest = { showSettings = false },
+            title = { Text("Cài đặt AI") },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text("API Key được mã hóa bằng Android Keystore và chỉ lưu trên thiết bị.")
+                    OutlinedTextField(value = apiKey, onValueChange = { apiKey = it }, label = { Text("Gemini API Key") }, singleLine = true)
+                    TextButton(onClick = { apiKey = ""; SecureKeyStore.save(context, "") }) { Text("Xóa API Key") }
+                    Text("Lấy khóa tại aistudio.google.com", style = MaterialTheme.typography.bodySmall)
+                }
+            },
+            confirmButton = { TextButton(onClick = { SecureKeyStore.save(context, apiKey); showSettings = false }) { Text("Lưu") } },
+            dismissButton = { TextButton(onClick = { showSettings = false }) { Text("Đóng") } }
+        )
     }
 }
 
