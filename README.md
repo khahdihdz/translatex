@@ -1,67 +1,37 @@
-# TranslateX
+# TranslateX Web
 
-AI-powered multilingual text and image translator for Android.
+TranslateX is a mobile-first, installable web translator hosted on GitHub Pages. This repository is now web-only; the Android APK project and APK release workflows have been removed.
 
-## Implemented in the first build
-- Context-aware AI text translation with Google Gemini API.
-- Multiple target languages in one translation request (processed sequentially).
-- Translation styles: Natural, Fluent, Literal, Professional, Casual and Technical.
-- On-device image-to-text OCR with Google ML Kit Text Recognition (Latin script in this build).
-- Offline text translation with Google ML Kit Translation; required language models download on demand.
-- Personal Gemini API key encrypted with Android Keystore.
-- Vietnamese-first app UI and Vietnamese / English landing page.
-- GitHub Actions workflows for APK builds and GitHub Pages deployment.
+## Features
+- Responsive translator UI inspired by the TranslateX mobile demo.
+- Gemini AI translation with a user-provided API key.
+- Free fallback translation through MyMemory API.
+- Multiple languages and translation styles.
+- Image OCR in the browser with Tesseract.js (English and Vietnamese OCR packs).
+- Copy translation, browser text-to-speech, voice input where supported.
+- Local translation history and PWA installation.
+- Vietnamese / English interface toggle.
 
-## Build
-Requires JDK 17, Android SDK Platform 36 and Gradle 8.13.
+## Deploy
+GitHub Pages deploys the `docs/` directory using the workflow at `.github/workflows/pages.yml`.
 
-```bash
-gradle :app:assembleDebug
-```
+In repository Settings → Pages, set Source to **GitHub Actions**. Every push to `main` that changes `docs/**` deploys the webapp.
 
-APK: `app/build/outputs/apk/debug/app-debug.apk`
+Live site: https://khahdihdz.github.io/translatex/
 
-## Gemini API
-1. Create a personal key at https://aistudio.google.com/app/apikey.
-2. Open TranslateX > Cài đặt and save the key.
-3. Text is sent to Google Gemini only after the user requests online translation.
-4. Free tier quotas, data handling and model availability are controlled by Google and may change.
+## Gemini AI
+1. Create a personal API key at https://aistudio.google.com/app/apikey.
+2. Open TranslateX → Cài đặt Gemini API.
+3. Paste the key and save. It is stored in browser localStorage on that device.
+4. Select Gemini AI and translate.
 
-The key is encrypted with Android Keystore and is not bundled into the APK. Do not use a personal key on shared devices. The initial model configured is `gemini-2.5-flash`; if Google changes model availability, update the endpoint in `GeminiTranslator.kt`.
+The key is sent directly from the browser to Google's Gemini API. TranslateX has no backend and does not proxy requests. Do not save a personal key on shared devices. Google controls quotas, model availability, and data handling. The configured model is `gemini-2.5-flash`.
 
-## Offline translation
-Choose **Offline ML Kit** in the app. ML Kit downloads the source/target language models when first used. Only languages supported by ML Kit Translation can work offline; this list is separate from Gemini's online language coverage.
+## Free mode
+Free mode uses MyMemory Translation API. It has request and text-size limits and may be unavailable or rate-limited. This mode does not require an API key.
 
-## Known limitations in this initial version
-- OCR currently uses ML Kit Latin text recognition. CJK and other script-specific OCR models are not wired yet.
-- Image overlay/replacing text in the original image is not implemented; OCR text is shown in the editor and can then be translated.
-- Camera capture is not yet implemented; choose an existing image from Gallery.
-- Recent history is session-only; Room-based persistent history and favorites are follow-up tasks.
-- App interface is Vietnamese-first; full in-app English localization is a follow-up task.
+## OCR and privacy
+Tesseract.js runs in the browser to extract text from images. Image files are not uploaded to TranslateX. If you then choose to translate the extracted text, that text is sent to the selected translation provider. See [Privacy Policy](docs/privacy.html).
 
-## GitHub Pages
-Enable GitHub Pages in repository Settings > Pages > Build and deployment > Source: **GitHub Actions**. The site is in `docs/`. After enabling Pages, re-run the Deploy Landing Page workflow or push a change under `docs/`.
-
-## Privacy
-OCR runs on-device. Text is sent to Google Gemini only when the user explicitly requests online AI translation. See [Privacy Policy](docs/privacy.html).
-
-## Signed release
-
-Release APKs are signed in GitHub Actions with the shared release keystore maintained by [khahdihdz/apksign](https://github.com/khahdihdz/apksign). The keystore is never committed to this repository.
-
-The release workflow requires these repository Actions secrets (synced centrally from `khahdihdz/apksign`):
-
-- `ANDROID_SIGNING_KEYSTORE_BASE64`
-- `ANDROID_SIGNING_STORE_PASSWORD`
-- `ANDROID_SIGNING_KEY_ALIAS`
-- `ANDROID_SIGNING_KEY_PASSWORD`
-
-If they are not present yet, open **khahdihdz/apksign → Actions → Sync Android signing to all repositories → Run workflow** and wait for TranslateX to be synced.
-
-The automatic release workflow creates a version tag, builds the release APK, verifies its signature with `apksigner`, and attaches the APK to the GitHub Release. APK files use the repository name: `translatex-vX.Y.Z.apk` for releases and `translatex-debug.apk` for debug builds. Do not change the application ID or shared signing key for future updates.
-
-## Automatic releases
-
-Every push to `main` triggers **Automatic Release**. It finds the latest semantic version tag and increments the patch number (for example, `v1.0.0` → `v1.0.1`). In the same workflow run, it builds the APK, signs it with the shared `khahdihdz/apksign` keystore, verifies the signature, and publishes the APK as a GitHub Release.
-
-The first automatic release starts at `v1.0.0` when no version tags exist. You can also run **Actions → Automatic Release → Run workflow** manually. Ensure the four `ANDROID_SIGNING_*` repository secrets have been synced from `khahdihdz/apksign`; otherwise the release signing job will stop with a clear error.
+## PWA
+The site includes a web manifest and service worker. On supported browsers, use the browser menu → Add to Home screen / Install app. The application shell is cached; online translation and OCR language assets require internet access.
