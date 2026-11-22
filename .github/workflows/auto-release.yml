@@ -141,18 +141,27 @@ jobs:
       - name: Build signed Release APK
         run: gradle --no-daemon :app:assembleRelease
 
-      - name: Verify APK signature
+      - name: Rename APK to repository name
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
         run: |
           set -euo pipefail
           APK="$(find app/build/outputs/apk/release -maxdepth 1 -name '*.apk' -print -quit)"
           test -n "$APK"
+          mv "$APK" "app/build/outputs/apk/release/translatex-${TAG}.apk"
+
+      - name: Verify APK signature
+        run: |
+          set -euo pipefail
+          APK="app/build/outputs/apk/release/translatex-${{ steps.version.outputs.tag }}.apk"
+          test -s "$APK"
           "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose --print-certs "$APK"
 
       - name: Upload signed APK artifact
         uses: actions/upload-artifact@v4
         with:
-          name: TranslateX-release-signed
-          path: app/build/outputs/apk/release/*.apk
+          name: translatex-release-signed
+          path: app/build/outputs/apk/release/translatex-*.apk
           retention-days: 30
 
       - name: Publish GitHub Release
