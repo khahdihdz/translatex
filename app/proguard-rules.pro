@@ -1,1 +1,0 @@
-# Default Android ProGuard configuration.
