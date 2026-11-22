@@ -44,3 +44,19 @@ Enable GitHub Pages in repository Settings > Pages > Build and deployment > Sour
 
 ## Privacy
 OCR runs on-device. Text is sent to Google Gemini only when the user explicitly requests online AI translation. See [Privacy Policy](docs/privacy.html).
+
+
+## Signed release
+
+Release APKs are signed in GitHub Actions with the shared release keystore maintained by [khahdihdz/apksign](https://github.com/khahdihdz/apksign). The keystore is never committed to this repository.
+
+The release workflow requires these repository Actions secrets (synced centrally from `khahdihdz/apksign`):
+
+- `ANDROID_SIGNING_KEYSTORE_BASE64`
+- `ANDROID_SIGNING_STORE_PASSWORD`
+- `ANDROID_SIGNING_KEY_ALIAS`
+- `ANDROID_SIGNING_KEY_PASSWORD`
+
+If they are not present yet, open **khahdihdz/apksign → Actions → Sync Android signing to all repositories → Run workflow** and wait for TranslateX to be synced.
+
+To publish a signed release, create and push a version tag such as `v1.0.0`. The workflow builds the release APK, verifies its signature with `apksigner`, and attaches the APK to the GitHub Release. Do not change the application ID or shared signing key for future updates.
