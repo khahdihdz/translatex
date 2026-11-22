@@ -2,7 +2,7 @@
 
 TranslateX is a mobile-first, installable web translator hosted on GitHub Pages. This repository is now web-only; the Android APK project and APK release workflows have been removed.
 
-## Features
+## Brand assets\n- App icon: `docs/assets/icon.svg`\n- Social sharing preview (1200×630): `docs/assets/social-preview.svg`\n- Open Graph and Twitter Card metadata is configured in `docs/index.html`.\n\n## Features
 - Responsive translator UI inspired by the TranslateX mobile demo.
 - Gemini AI translation with a user-provided API key.
 - Free fallback translation through MyMemory API.
