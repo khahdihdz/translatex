@@ -60,3 +60,10 @@ The release workflow requires these repository Actions secrets (synced centrally
 If they are not present yet, open **khahdihdz/apksign → Actions → Sync Android signing to all repositories → Run workflow** and wait for TranslateX to be synced.
 
 To publish a signed release, create and push a version tag such as `v1.0.0`. The workflow builds the release APK, verifies its signature with `apksigner`, and attaches the APK to the GitHub Release. Do not change the application ID or shared signing key for future updates.
+
+
+## Automatic releases
+
+Every push to `main` triggers **Automatic Release**. It finds the latest semantic version tag and increments the patch number (for example, `v1.0.0` → `v1.0.1`). The new tag triggers **Android Build and Release**, which builds the APK, signs it with the shared `khahdihdz/apksign` keystore, verifies the signature, and publishes the APK as a GitHub Release.
+
+The first automatic release starts at `v1.0.0` when no version tags exist. You can also run **Actions → Automatic Release → Run workflow** manually. Ensure the four `ANDROID_SIGNING_*` repository secrets have been synced from `khahdihdz/apksign`; otherwise the release signing job will stop with a clear error.
