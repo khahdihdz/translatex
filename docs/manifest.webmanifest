@@ -1,1 +1,18 @@
-{"name":"TranslateX – AI Translator","short_name":"TranslateX","description":"Natural AI multilingual translator","start_url":"./","scope":"./","display":"standalone","background_color":"#f8f9fd","theme_color":"#f7f8fc","icons":[{"src":"assets/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]}
+{
+  "name": "TranslateX – AI Translator",
+  "short_name": "TranslateX",
+  "description": "Dịch văn bản và hình ảnh tự nhiên bằng AI với TranslateX.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f8f9fd",
+  "theme_color": "#f7f8fc",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
