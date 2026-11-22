@@ -88,22 +88,40 @@ private fun TranslateXApp() {
         }) { padding ->
             Column(Modifier.fillMaxSize().padding(padding).verticalScroll(rememberScrollState()).padding(16.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
                 Card(colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)) {
-                    Column(Modifier.padding(16.dp)) {
-                        Text("Dịch tự nhiên, hiểu đúng ngữ cảnh", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-                        Text("Natural, context-aware translation across languages.", style = MaterialTheme.typography.bodySmall)
+                    Column(Modifier.fillMaxWidth().padding(16.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                        Text("TranslateX", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
+                        Text("Dịch văn bản và hình ảnh tự nhiên bằng AI", style = MaterialTheme.typography.bodyMedium)
+                        Text("Giữ ngữ cảnh · Nhiều ngôn ngữ · Có chế độ ngoại tuyến", style = MaterialTheme.typography.labelSmall)
                     }
                 }
-                LanguageDropdown("Ngôn ngữ nguồn", sourceTag) { sourceTag = it }
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.SwapHoriz, contentDescription = null)
-                    Spacer(Modifier.width(8.dp))
-                    Text("Chọn ngôn ngữ đích (có thể chọn nhiều)", style = MaterialTheme.typography.titleSmall)
-                }
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                    languages.filter { it.tag != "auto" }.forEach { lang ->
-                        FilterChip(selected = lang.tag in targets, onClick = {
-                            targets = if (lang.tag in targets) targets - lang.tag else targets + lang.tag
-                        }, label = { Text(lang.label) })
+                Card {
+                    Column(Modifier.fillMaxWidth().padding(12.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        Text("NGÔN NGỮ", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold)
+                        LanguageDropdown("Từ ngôn ngữ", sourceTag) { sourceTag = it }
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("Dịch sang", style = MaterialTheme.typography.labelLarge, modifier = Modifier.weight(1f))
+                            Text("${targets.size} đã chọn", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.secondary)
+                        }
+                        FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp), verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                            targets.forEach { tag ->
+                                val label = languages.firstOrNull { it.tag == tag }?.label ?: tag
+                                InputChip(selected = true, onClick = { if (targets.size > 1) targets = targets - tag }, label = { Text(label) }, trailingIcon = { Text("×") })
+                            }
+                        }
+                        var targetExpanded by remember { mutableStateOf(false) }
+                        ExposedDropdownMenuBox(expanded = targetExpanded, onExpandedChange = { targetExpanded = it }) {
+                            OutlinedButton(onClick = { targetExpanded = true }, modifier = Modifier.menuAnchor().fillMaxWidth()) {
+                                Text("＋ Thêm ngôn ngữ đích")
+                            }
+                            ExposedDropdownMenu(expanded = targetExpanded, onDismissRequest = { targetExpanded = false }) {
+                                languages.filter { it.tag != "auto" && it.tag !in targets }.forEach { lang ->
+                                    DropdownMenuItem(text = { Text(lang.label) }, onClick = {
+                                        targets = targets + lang.tag
+                                        targetExpanded = false
+                                    })
+                                }
+                            }
+                        }
                     }
                 }
                 var styleExpanded by remember { mutableStateOf(false) }
@@ -119,7 +137,7 @@ private fun TranslateXApp() {
                     FilterChip(selected = mode == "Offline", onClick = { mode = "Offline" }, label = { Text("Offline ML Kit") })
                 }
                 OutlinedTextField(value = source, onValueChange = { source = it }, modifier = Modifier.fillMaxWidth().heightIn(min = 150.dp),
-                    label = { Text("Văn bản cần dịch / Text to translate") }, placeholder = { Text("Nhập hoặc dán nội dung tại đây…") }, minLines = 5)
+                    label = { Text("NỘI DUNG CẦN DỊCH") }, placeholder = { Text("Nhập hoặc dán văn bản cần dịch…") }, minLines = 5)
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
                     OutlinedButton(onClick = { imagePicker.launch("image/*") }, modifier = Modifier.weight(1f)) {
                         Icon(Icons.Default.Image, contentDescription = null); Spacer(Modifier.width(6.dp)); Text("Dịch ảnh / OCR")
@@ -145,7 +163,7 @@ private fun TranslateXApp() {
                             finally { loading = false }
                         }
                     }, enabled = !loading, modifier = Modifier.weight(1f)) {
-                        if (loading) CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp) else Text("Dịch bằng AI")
+                        if (loading) CircularProgressIndicator(Modifier.size(18.dp), strokeWidth = 2.dp) else Text(if (mode == "Offline") "Dịch ngoại tuyến" else "Dịch ngay")
                     }
                 }
                 Text(status, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.secondary)
