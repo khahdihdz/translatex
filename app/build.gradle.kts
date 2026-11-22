@@ -14,8 +14,20 @@ android {
         versionCode = 1
         versionName = "1.0.0"
     }
+    signingConfigs {
+        create("release") {
+            storeFile = file(System.getenv("ANDROID_SIGNING_KEYSTORE_PATH") ?: "${rootProject.projectDir}/missing-release-key.jks")
+            storePassword = System.getenv("ANDROID_SIGNING_STORE_PASSWORD")
+            keyAlias = System.getenv("ANDROID_SIGNING_KEY_ALIAS") ?: "khahdihdz-release"
+            keyPassword = System.getenv("ANDROID_SIGNING_KEY_PASSWORD")
+        }
+    }
     buildTypes {
-        release { isMinifyEnabled = false; proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro") }
+        release {
+            signingConfig = signingConfigs.getByName("release")
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
         debug { applicationIdSuffix = ".debug" }
     }
     compileOptions { sourceCompatibility = JavaVersion.VERSION_17; targetCompatibility = JavaVersion.VERSION_17 }
