@@ -58,7 +58,7 @@ The release workflow requires these repository Actions secrets (synced centrally
 
 If they are not present yet, open **khahdihdz/apksign → Actions → Sync Android signing to all repositories → Run workflow** and wait for TranslateX to be synced.
 
-The automatic release workflow creates a version tag, builds the release APK, verifies its signature with `apksigner`, and attaches the APK to the GitHub Release. Do not change the application ID or shared signing key for future updates.
+The automatic release workflow creates a version tag, builds the release APK, verifies its signature with `apksigner`, and attaches the APK to the GitHub Release. APK files use the repository name: `translatex-vX.Y.Z.apk` for releases and `translatex-debug.apk` for debug builds. Do not change the application ID or shared signing key for future updates.
 
 ## Automatic releases
 
