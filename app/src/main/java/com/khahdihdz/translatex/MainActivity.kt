@@ -56,6 +56,7 @@ private fun TranslateXApp() {
     var sourceTag by remember { mutableStateOf("auto") }
     var targets by remember { mutableStateOf(setOf("vi")) }
     var style by remember { mutableStateOf("Natural") }
+    var mode by remember { mutableStateOf("AI") }
     var apiKey by remember { mutableStateOf(SecureKeyStore.read(context)) }
     var showSettings by remember { mutableStateOf(false) }
     var loading by remember { mutableStateOf(false) }
@@ -113,6 +114,10 @@ private fun TranslateXApp() {
                         styles.forEach { option -> DropdownMenuItem(text = { Text(option) }, onClick = { style = option; styleExpanded = false }) }
                     }
                 }
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    FilterChip(selected = mode == "AI", onClick = { mode = "AI" }, label = { Text("Gemini AI") })
+                    FilterChip(selected = mode == "Offline", onClick = { mode = "Offline" }, label = { Text("Offline ML Kit") })
+                }
                 OutlinedTextField(value = source, onValueChange = { source = it }, modifier = Modifier.fillMaxWidth().heightIn(min = 150.dp),
                     label = { Text("Văn bản cần dịch / Text to translate") }, placeholder = { Text("Nhập hoặc dán nội dung tại đây…") }, minLines = 5)
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
@@ -121,7 +126,7 @@ private fun TranslateXApp() {
                     }
                     Button(onClick = {
                         if (source.isBlank() || targets.isEmpty()) status = "Nhập nội dung và chọn ít nhất một ngôn ngữ đích."
-                        else if (apiKey.isBlank()) { showSettings = true; status = "Thêm Gemini API Key để sử dụng AI." }
+                        else if (mode == "AI" && apiKey.isBlank()) { showSettings = true; status = "Thêm Gemini API Key để sử dụng AI." }
                         else scope.launch {
                             loading = true; result = ""; status = "Đang dịch…"
                             try {
@@ -130,7 +135,7 @@ private fun TranslateXApp() {
                                 val output = mutableListOf<String>()
                                 targets.forEach { target ->
                                     val targetName = languages.firstOrNull { it.tag == target }?.label ?: target
-                                    val translated = GeminiTranslator.translate(apiKey, source, sourceName, targetName, style)
+                                    val translated = if (mode == "Offline") OfflineTranslator.translate(source, detected, target) else GeminiTranslator.translate(apiKey, source, sourceName, targetName, style)
                                     output += "【$targetName】\n$translated"
                                 }
                                 result = output.joinToString("\n\n")
@@ -160,7 +165,7 @@ private fun TranslateXApp() {
                     Text("Gần đây", style = MaterialTheme.typography.titleSmall)
                     history.forEach { item -> TextButton(onClick = { source = item }) { Text(item, maxLines = 1) } }
                 }
-                Text("Gemini AI cần API Key cá nhân và Internet. OCR xử lý trên thiết bị. Dịch offline ML Kit sẽ được bổ sung ở bản tiếp theo.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text("Gemini AI cần API Key cá nhân và Internet. Offline dùng mô hình ML Kit tải về theo từng cặp ngôn ngữ; danh sách hỗ trợ có thể khác AI online. OCR xử lý trên thiết bị.", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
             }
         }
         if (showSettings) AlertDialog(onDismissRequest = { showSettings = false }, title = { Text("Cài đặt AI") }, text = {
