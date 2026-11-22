@@ -1,49 +1,42 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
 <defs>
- <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fbfcff"/><stop offset="1" stop-color="#edf1ff"/></linearGradient>
- <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3157d5"/><stop offset="1" stop-color="#7189f4"/></linearGradient>
- <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="16" stdDeviation="22" flood-color="#182342" flood-opacity=".12"/></filter>
+ <linearGradient id="bg" x2="1" y2="1"><stop stop-color="#f8fbff"/><stop offset=".58" stop-color="#e8f2ff"/><stop offset="1" stop-color="#c9ddff"/></linearGradient>
+ <linearGradient id="blue" x2="1" y2="1"><stop stop-color="#13a7ff"/><stop offset="1" stop-color="#0645d9"/></linearGradient>
+ <linearGradient id="earth" x2="1" y2="1"><stop stop-color="#087cff"/><stop offset="1" stop-color="#061f9b"/></linearGradient>
+ <filter id="shadow" x="-30%" y="-30%" width="160%" height="170%"><feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#12366e" flood-opacity=".24"/></filter>
 </defs>
 <rect width="1200" height="630" fill="url(#bg)"/>
-<circle cx="1090" cy="90" r="210" fill="#e4eaff" opacity=".62"/>
-<circle cx="95" cy="620" r="220" fill="#e5eaff" opacity=".55"/>
-<!-- compact brand lockup -->
-<rect x="62" y="45" width="48" height="48" rx="14" fill="url(#blue)"/>
-<path d="M75 57h23v7h-8v23h-7V64h-8z" fill="#fff"/>
-<text x="124" y="80" font-family="Arial,Helvetica,sans-serif" font-size="31" font-weight="700" letter-spacing="-1.2" fill="#182342">TranslateX</text>
-<text x="64" y="151" font-family="Arial,Helvetica,sans-serif" font-size="37" font-weight="700" letter-spacing="-1.2" fill="#182342">Dịch tự nhiên.</text>
-<text x="64" y="197" font-family="Arial,Helvetica,sans-serif" font-size="37" font-weight="700" letter-spacing="-1.2" fill="#182342">Hiểu mọi ngôn ngữ.</text>
-<text x="66" y="235" font-family="Arial,Helvetica,sans-serif" font-size="19" fill="#74809a">Natural AI translation</text>
-<!-- feature labels in the same restrained app palette -->
-<rect x="64" y="273" width="135" height="37" rx="18.5" fill="#fff"/>
-<text x="82" y="297" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" fill="#3157d5">✦ Gemini AI</text>
-<rect x="209" y="273" width="112" height="37" rx="18.5" fill="#fff"/>
-<text x="228" y="297" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" fill="#3157d5">▧ OCR ảnh</text>
-<rect x="331" y="273" width="133" height="37" rx="18.5" fill="#fff"/>
-<text x="350" y="297" font-family="Arial,Helvetica,sans-serif" font-size="14" font-weight="700" fill="#3157d5">35+ ngôn ngữ</text>
-<text x="65" y="566" font-family="Arial,Helvetica,sans-serif" font-size="16" fill="#8a93a8">khahdihdz.github.io/translatex</text>
-<!-- app screen preview: same hierarchy, colors, radii and sample copy as the actual app -->
-<g filter="url(#shadow)">
- <rect x="535" y="38" width="610" height="554" rx="43" fill="#182342"/>
- <rect x="549" y="52" width="582" height="526" rx="32" fill="#fff"/>
+<circle cx="1080" cy="80" r="240" fill="#fff" opacity=".48"/>
+<path d="M0 475Q270 405 540 470T1200 450V630H0Z" fill="url(#earth)"/>
+<path d="M0 490Q280 420 560 488T1200 465" fill="none" stroke="#46c4ff" stroke-width="3" opacity=".7"/>
+<g fill="none" stroke="#6fd8ff" stroke-width="2" opacity=".65"><path d="M50 560Q230 450 410 555T780 530T1170 550"/><path d="M100 610Q310 480 520 600T930 570T1190 590"/></g>
+<g font-family="Arial,Helvetica,sans-serif">
+ <rect x="54" y="48" width="92" height="92" rx="25" fill="url(#blue)"/>
+ <path d="M78 76h48v13h-17v35h-14V89H78z" fill="#fff"/><path d="M119 65l5 11 11 5-11 5-5 11-5-11-11-5 11-5z" fill="#fff"/>
+ <text x="166" y="116" font-size="69" font-weight="800" letter-spacing="-3" fill="#071c55">Translate<tspan fill="#075bea">X</tspan></text>
+ <text x="58" y="178" font-size="27" font-weight="700" font-style="italic" fill="#0750c9">Dịch thông minh · Đa ngôn ngữ · Miễn phí</text>
+ <path d="M60 198Q250 174 475 198" fill="none" stroke="#087cff" stroke-width="6" stroke-linecap="round"/>
+ <!-- feature grid -->
+ <g fill="#09245f"><text x="145" y="276" font-size="25" font-weight="700">Gemini AI</text><text x="145" y="305" font-size="18">Dịch tự nhiên</text><text x="405" y="276" font-size="25" font-weight="700">OCR Ảnh</text><text x="405" y="305" font-size="18">Nhận dạng &amp; dịch</text><text x="145" y="375" font-size="25" font-weight="700">Dịch Offline</text><text x="145" y="404" font-size="18">Không cần mạng*</text><text x="405" y="375" font-size="25" font-weight="700">35+ Ngôn ngữ</text><text x="405" y="404" font-size="18">Đa dạng lựa chọn</text><text x="145" y="474" font-size="25" font-weight="700">Lịch sử dịch</text><text x="145" y="503" font-size="18">Lưu trên thiết bị</text><text x="405" y="474" font-size="25" font-weight="700">Đọc &amp; Sao chép</text><text x="405" y="503" font-size="18">Tiện lợi hơn</text></g>
+ <g fill="#fff"><rect x="58" y="238" width="68" height="68" rx="19" opacity=".95"/><rect x="318" y="238" width="68" height="68" rx="19" opacity=".95"/><rect x="58" y="338" width="68" height="68" rx="19" opacity=".95"/><rect x="318" y="338" width="68" height="68" rx="19" opacity=".95"/><rect x="58" y="438" width="68" height="68" rx="19" opacity=".95"/><rect x="318" y="438" width="68" height="68" rx="19" opacity=".95"/></g>
+ <g fill="none" stroke="#0874ef" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"><path d="M78 274l10 10 18-24M338 258h28v30h-28zM343 282l8-9 7 7 5-6 5 8M77 364l28 28M105 364l-28 28M338 372h28M352 358v28M78 471h28M92 457v28M338 470q14-22 28 0M338 482q14-22 28 0"/></g>
+ <text x="60" y="575" font-size="32" font-style="italic" fill="#fff">Kết nối thế giới bằng ngôn ngữ của bạn!</text>
+ <text x="60" y="608" font-size="14" fill="#cfe8ff">khahdihdz.github.io/translatex</text>
 </g>
-<text x="594" y="112" font-family="Arial,Helvetica,sans-serif" font-size="31" font-weight="700" letter-spacing="-1" fill="#182342">TranslateX</text>
-<path d="M1035 84l7 16 16 7-16 7-7 16-7-16-16-7 16-7z" fill="#3157d5"/>
-<text x="1067" y="113" font-family="Arial,Helvetica,sans-serif" font-size="24" font-weight="700" fill="#3157d5">AI</text>
-<!-- language selector -->
-<rect x="594" y="151" width="502" height="78" rx="22" fill="#eef1ff"/>
-<text x="620" y="198" font-family="Arial,Helvetica,sans-serif" font-size="26" fill="#182342">English</text>
-<text x="827" y="198" font-family="Arial,Helvetica,sans-serif" font-size="26" fill="#182342">⇄</text>
-<text x="914" y="198" font-family="Arial,Helvetica,sans-serif" font-size="26" fill="#182342">Tiếng Việt</text>
-<!-- source text -->
-<rect x="594" y="252" width="502" height="117" rx="23" fill="#f5f6fa"/>
-<text x="626" y="309" font-family="Arial,Helvetica,sans-serif" font-size="29" fill="#182342">The world is full of</text>
-<text x="626" y="349" font-family="Arial,Helvetica,sans-serif" font-size="29" fill="#182342">possibilities.</text>
-<!-- translated text -->
-<rect x="594" y="390" width="502" height="124" rx="23" fill="#eef1ff"/>
-<text x="626" y="444" font-family="Arial,Helvetica,sans-serif" font-size="26" fill="#294a9e">Thế giới tràn ngập những</text>
-<text x="626" y="485" font-family="Arial,Helvetica,sans-serif" font-size="26" fill="#294a9e">điều có thể xảy ra.</text>
-<!-- style chip -->
-<rect x="594" y="532" width="235" height="34" rx="17" fill="#eef1ff"/>
-<text x="612" y="555" font-family="Arial,Helvetica,sans-serif" font-size="17" fill="#5068ad">Natural translation</text>
+<!-- angled phone preview -->
+<g transform="translate(735 45) rotate(7 220 270)" filter="url(#shadow)">
+ <rect x="0" y="0" width="410" height="560" rx="48" fill="#101b31"/>
+ <rect x="11" y="11" width="388" height="538" rx="39" fill="#fff"/>
+ <rect x="160" y="20" width="88" height="13" rx="7" fill="#101b31"/>
+ <text x="38" y="78" font-family="Arial" font-size="28" font-weight="700" fill="#09245f">TranslateX</text>
+ <path d="M344 53l7 16 16 7-16 7-7 16-7-16-16-7 16-7z" fill="#075bea"/>
+ <rect x="27" y="105" width="356" height="61" rx="20" fill="#eef3ff"/>
+ <text x="48" y="143" font-family="Arial" font-size="20" font-weight="700" fill="#09245f">🇬🇧 English</text><text x="194" y="145" font-family="Arial" font-size="25" fill="#075bea">⇄</text><text x="238" y="143" font-family="Arial" font-size="20" font-weight="700" fill="#09245f">🇻🇳 Tiếng Việt</text>
+ <rect x="27" y="185" width="356" height="145" rx="22" fill="#f2f4f8"/>
+ <text x="51" y="238" font-family="Arial" font-size="23" fill="#15264c">The world is full</text><text x="51" y="270" font-family="Arial" font-size="23" fill="#15264c">of possibilities.</text>
+ <rect x="262" y="280" width="98" height="39" rx="19" fill="#075bea"/><text x="281" y="306" font-family="Arial" font-size="17" font-weight="700" fill="#fff">Dịch ➤</text>
+ <rect x="27" y="349" width="356" height="139" rx="22" fill="#e5efff"/>
+ <text x="50" y="400" font-family="Arial" font-size="21" font-weight="700" fill="#123b91">Thế giới tràn ngập</text><text x="50" y="432" font-family="Arial" font-size="21" font-weight="700" fill="#123b91">những điều có thể xảy ra.</text>
+ <rect x="86" y="505" width="240" height="31" rx="16" fill="#fff" stroke="#b6d3ff"/><text x="108" y="526" font-family="Arial" font-size="15" font-weight="700" fill="#075bea">✓ Natural translation</text>
+</g>
 </svg>
